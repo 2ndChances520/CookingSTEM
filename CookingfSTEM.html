@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grill & Measure – The Fraction Feast!</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <style>
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #FFF8DC; /* Cornsilk - a warm, inviting color */
+            color: #5D4037; /* Brown for text */
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        header {
+            background-color: #FF6347; /* Tomato red */
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+            margin: -20px -20px 20px -20px; /* Extend to container edges */
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            margin-top: 5px;
+        }
+
+        nav {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 10px;
+            background-color: #FFA07A; /* Light Salmon */
+            border-radius: 8px;
+        }
+
+        nav button {
+            background-color: #FF7F50; /* Coral */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        nav button:hover {
+            background-color: #FF6347; /* Tomato */
+        }
+
+        section {
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #FFF5EE; /* Seashell */
+            border-left: 5px solid #FF7F50; /* Coral accent */
+            border-radius: 0 8px 8px 0;
+        }
+
+        h2 {
+            color: #D2691E; /* Chocolate */
+            border-bottom: 2px solid #FFDAB9; /* PeachPuff */
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            color: #A0522D; /* Sienna */
+        }
+
+        ul {
+            list-style-type: '🍔'; /* Fun list bullet */
+            padding-left: 30px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background-color: #FFDAB9; /* PeachPuff */
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .interactive-area {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #F0E68C; /* Khaki */
+            border-radius: 10px;
+        }
+
+        #threejs-canvas-container {
+            width: 100%;
+            height: 400px;
+            margin: 20px auto;
+            border: 2px dashed #A0522D; /* Sienna */
+            border-radius: 8px;
+            position: relative; /* For absolute positioning of messages */
+        }
+        
+        #canvas-message {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 0.9em;
+            color: #5D4037;
+        }
+
+        .fraction-buttons button {
+            background-color: #8FBC8F; /* DarkSeaGreen */
+            color: white;
+            padding: 12px 18px;
+            margin: 8px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .fraction-buttons button:hover {
+            background-color: #3CB371; /* MediumSeaGreen */
+        }
+
+        .question {
+            background-color: #ADD8E6; /* LightBlue */
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .question p {
+            margin: 0 0 10px 0;
+        }
+
+        .question input[type="text"] {
+            padding: 8px;
+            border: 1px solid #87CEEB; /* SkyBlue */
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .question button {
+            background-color: #4682B4; /* SteelBlue */
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .question button:hover {
+            background-color: #5F9EA0; /* CadetBlue */
+        }
+
+        #feedback {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍔 Grill & Measure – The Fraction Feast! ✨</h1>
+            <p>A Sizzling STEM Adventure in Measurements and Fractions!</p>
+        </header>
+
+        <nav>
+            <button onclick="scrollToSection('warm-up')">Warm-Up</button>
+            <button onclick="scrollToSection('science-cooking')">Science</button>
+            <button onclick="scrollToSection('hands-on')">Hands-On Patties</button>
+            <button onclick="scrollToSection('grill-time')">Grill Time</button>
+            <button onclick="scrollToSection('math-wrap-up')">Math Wrap-Up</button>
+            <button onclick="scrollToSection('extension')">Extension</button>
+        </nav>
+
+        <section id="intro">
+            <h2>Welcome, Young Chefs!</h2>
+            <p>Oh what a <span class="highlight">delightful</span> idea, dearie! Cooking on the grill and learning measurements and fractions—why, that’s a <span class="highlight">recipe for success</span> if I’ve ever seen one! Let's whip up a lovely STEM class that blends math, science, and deliciousness—all under the aroma of sizzling burgers! </p>
+            <p><strong>Grade Level:</strong> 4th–6th</p>
+            <p><strong>Duration:</strong> ~60–75 minutes</p>
+            <p><strong>Objective:</strong> Students will learn basic measurement concepts and fractions through hands-on cooking and portioning activities using hamburger meat on a propane grill.</p>
+        </section>
+
+        <section id="stem-focus">
+            <h2>🧪 STEM Focus Areas:</h2>
+            <ul>
+                <li><strong>Science:</strong> States of matter, heat transfer, temperature control</li>
+                <li><strong>Technology/Engineering:</strong> Grill operation and safety, propane use</li>
+                <li><strong>Math:</strong> Measurements (volume, weight), fractions (halves, thirds, quarters), conversions</li>
+            </ul>
+        </section>
+
+        <section id="warm-up">
+            <h2>1. Warm-Up (10 minutes) — Fraction Foundations</h2>
+            <p>Let's review some key terms: <span class="highlight">whole</span>, <span class="highlight">half</span>, <span class="highlight">third</span>, <span class="highlight">quarter</span>, <span class="highlight">ounce (oz)</span>, <span class="highlight">pound (lb)</span>.</p>
+            <p>Imagine a yummy chocolate bar! If you break it into 2 equal pieces, each piece is a half (1/2). If you break it into 4 equal pieces, each piece is a quarter (1/4).</p>
+            
+            <div class="question">
+                <p><strong>Quick Question:</strong> If we had 1 lb of meat and split it into 4 equal burgers, how much would each burger weigh in pounds (as a fraction)?</p>
+                <input type="text" id="warmup-q1-answer" placeholder="e.g., 1/4">
+                <button onclick="checkWarmupQ1()">Check Answer</button>
+                <p id="warmup-q1-feedback"></p>
+                <p><em>Hint: 1 pound = 16 ounces. So each burger would also be 4 oz!</em></p>
+            </div>
+        </section>
+
+        <section id="science-cooking">
+            <h2>2. Science of Cooking (10 minutes)</h2>
+            <p>When we cook, science is all around us!</p>
+            <ul>
+                <li><strong>Heat Transfer:</strong> Heat moves from the hot grill to the cold burger!
+                    <ul>
+                        <li><span class="highlight">Conduction:</span> Heat moving directly through the grill grates to the burger.</li>
+                        <li><span class="highlight">Convection:</span> Hot air circulating around the burger.</li>
+                    </ul>
+                </li>
+                <li><strong>What happens to meat?</strong>
+                    <ul>
+                        <li>Proteins change shape and firm up (that's why it goes from soft to firm).</li>
+                        <li>Fats melt and make it juicy (this is called rendering).</li>
+                        <li>Water evaporates, making steam.</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section id="hands-on">
+            <h2>3. Hands-On: Weigh & Shape the Patties (15–20 minutes)</h2>
+            <p>Let's get interactive with our virtual patties! Below you'll see a 3D grill. We can visualize how a 1 lb block of 'meat' can be divided.</p>
+            <p><strong>Remember: 1 pound (lb) = 16 ounces (oz)</strong></p>
+            
+            <div class="interactive-area">
+                <h3>Virtual Burger Patties</h3>
+                <p>Click the buttons to see how 1 lb of meat can be divided into different sized patties.</p>
+                <div id="threejs-canvas-container">
+                    <div id="canvas-message">Loading 3D grill...</div>
+                </div>
+                <div class="fraction-buttons">
+                    <button onclick="showPatties(1)">Show 1 Whole (1 lb) Patty</button>
+                    <button onclick="showPatties(2)">Show 1/2 lb Patties (2)</button>
+                    <button onclick="showPatties(3)">Show 1/3 lb Patties (3)</button>
+                    <button onclick="showPatties(4)">Show 1/4 lb Patties (4)</button>
+                </div>
+                <div id="patty-info"></div>
+            </div>
+
+            <div class="question">
+                <p><strong>Challenge Question 1:</strong> How many ⅓ lb burgers can we make from 1 lb of meat?</p>
+                <input type="text" id="challenge-q1-answer" placeholder="Enter number">
+                <button onclick="checkChallengeQ1()">Check Answer</button>
+                <p id="challenge-q1-feedback"></p>
+            </div>
+            <div class="question">
+                <p><strong>Challenge Question 2:</strong> A recipe asks for 4 oz burgers. How many can we make from 1.5 lbs of meat? (Hint: 1 lb = 16 oz)</p>
+                <input type="text" id="challenge-q2-answer" placeholder="Enter number">
+                <button onclick="checkChallengeQ2()">Check Answer</button>
+                <p id="challenge-q2-feedback"></p>
+            </div>
+
+        </section>
+
+        <section id="grill-time">
+            <h2>4. Grill Time! (15 minutes, supervised by adult)</h2>
+            <p>If we were really grilling, safety would be super important!</p>
+            <ul>
+                <li>Always have an adult supervise.</li>
+                <li>Be careful of the heat and open flames.</li>
+                <li>Know how to use the propane tank safely.</li>
+                <li>Use a food thermometer to check if the burgers are cooked. For ground beef, it needs to reach an internal temperature of <span class="highlight">160°F (71°C)</span> to be safe to eat.</li>
+            </ul>
+            <p>In our virtual grill, imagine the patties sizzling away! Our 3D scene shows a simple grill.</p>
+        </section>
+
+        <section id="math-wrap-up">
+            <h2>5. Math Wrap-Up (10 minutes) – The Burger Breakdown</h2>
+            <p>Fractions are everywhere in cooking!</p>
+            <ul>
+                <li><strong>Toppings:</strong>
+                    <ul>
+                        <li>You might cut a slice of cheese in <span class="highlight">half (1/2)</span>.</li>
+                        <li>You might slice a tomato into <span class="highlight">eighths (1/8)</span>.</li>
+                        <li>You might use <span class="highlight">1/4 cup</span> of onions.</li>
+                    </ul>
+                </li>
+                <li><strong>Portion Sizes:</strong> We've already seen how burgers are portioned using fractions of a pound (1/4 lb, 1/3 lb).</li>
+            </ul>
+            <p>Think about your favorite recipe. Where do you see fractions or measurements?</p>
+        </section>
+
+        <section id="extension">
+            <h2>🍽️ Optional Extension: Build Your Burger Bar</h2>
+            <p>Imagine you're at a burger bar! Let's use fractions for our toppings:</p>
+            <p><strong>Your Mission (if you choose to accept it):</strong> Design your dream burger! Write down or draw your burger recipe using fractions for the toppings.</p>
+            <p><em>Example:</em></p>
+            <ul>
+                <li>1 patty (1/3 lb)</li>
+                <li>1/2 slice of cheddar cheese</li>
+                <li>2 slices of tomato (if 1 tomato = 8 slices, then 2 slices = 2/8 or 1/4 of a tomato)</li>
+                <li>1/8 cup of shredded lettuce</li>
+                <li>1 teaspoon (tsp) of ketchup</li>
+            </ul>
+            <p>What would your fractional burger recipe be?</p>
+        </section>
+
+        <section id="assessment">
+            <h2>🧾 Assessment Ideas:</h2>
+            <ul>
+                <li>Discuss: Where did we see fractions today in our virtual cooking class?</li>
+                <li>Why do chefs and cooks need to be good at math, especially with fractions and measurements?</li>
+                <li>What would happen if a chef didn't measure ingredients correctly for a big cake?</li>
+            </ul>
+        </section>
+
+        <footer>
+            <p style="text-align:center; font-size:0.9em; color: #A0522D;">Happy Grilling & Measuring! Hope you had a *deliciously* fun time!</p>
+        </footer>
+    </div>
+
+    <script>
+        // Smooth scroll for navigation
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Warm-up Question
+        function checkWarmupQ1() {
+            const answer = document.getElementById('warmup-q1-answer').value.trim();
+            const feedback = document.getElementById('warmup-q1-feedback');
+            if (answer === "1/4") {
+                feedback.textContent = "Correct! Each burger would be 1/4 lb.";
+                feedback.style.color = 'green';
+            } else {
+                feedback.textContent = "Not quite. If 1 lb is split into 4 equal parts, each part is one-fourth. Try again!";
+                feedback.style.color = 'red';
+            }
+        }
+        
+        // Challenge Questions
+        function checkChallengeQ1() {
+            const answer = document.getElementById('challenge-q1-answer').value.trim();
+            const feedback = document.getElementById('challenge-q1-feedback');
+            if (answer === "3") {
+                feedback.textContent = "You got it! You can make 3 burgers.";
+                feedback.style.color = 'green';
+            } else {
+                feedback.textContent = "Hmm, think about how many 'thirds' fit into one whole. Try again!";
+                feedback.style.color = 'red';
+            }
+        }
+
+        function checkChallengeQ2() {
+            const answer = document.getElementById('challenge-q2-answer').value.trim();
+            const feedback = document.getElementById('challenge-q2-feedback');
+            // 1.5 lbs = 1.5 * 16 oz = 24 oz.  24 oz / 4 oz/burger = 6 burgers.
+            if (answer === "6") {
+                feedback.textContent = "Excellent! 1.5 lbs is 24 oz, so you can make 6 burgers of 4 oz each.";
+                feedback.style.color = 'green';
+            } else {
+                feedback.textContent = "Let's break it down: First convert 1.5 lbs to ounces (1 lb = 16 oz). Then see how many 4 oz portions fit. Try again!";
+                feedback.style.color = 'red';
+            }
+        }
+
+        // Three.js Scene
+        let scene, camera, renderer, controls;
+        let grill, pattiesGroup;
+        const pattyInfoElement = document.getElementById('patty-info');
+        const canvasMessageElement = document.getElementById('canvas-message');
+
+        function initThreeJS() {
+            const container = document.getElementById('threejs-canvas-container');
+            if (!container) {
+                console.error("Three.js container not found!");
+                return;
+            }
+
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xF0E68C); // Khaki, same as interactive area
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 15, 25); // Adjusted for better view
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
+            
+            canvasMessageElement.textContent = "Use mouse to rotate, zoom, and pan grill!";
+
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 10, 7.5);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+            
+            // OrbitControls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.screenSpacePanning = false;
+            controls.minDistance = 10;
+            controls.maxDistance = 50;
+            controls.maxPolarAngle = Math.PI / 2 - 0.1; // Don't look from below ground
+
+            // Grill
+            createGrill();
+
+            // Patties Group - for easy clearing
+            pattiesGroup = new THREE.Group();
+            scene.add(pattiesGroup);
+
+            // Initial patties
+            showPatties(1); 
+
+            // Handle window resize
+            window.addEventListener('resize', onWindowResize, false);
+
+            animate();
+        }
+
+        function createGrill() {
+            // Grill Body (charcoal grey)
+            const grillBodyMaterial = new THREE.MeshStandardMaterial({ color: 0x444444, roughness: 0.8, metalness: 0.2 });
+            const grillBodyGeometry = new THREE.CylinderGeometry(10, 10, 4, 32); // radiusTop, radiusBottom, height, radialSegments
+            grill = new THREE.Mesh(grillBodyGeometry, grillBodyMaterial);
+            grill.position.y = 0; // Base of grill at y=0
+            grill.castShadow = true;
+            grill.receiveShadow = true;
+            scene.add(grill);
+
+            // Grill Grate (darker grey)
+            const grateMaterial = new THREE.MeshStandardMaterial({ color: 0x333333, wireframe: false, roughness: 0.5, metalness: 0.5 });
+            const grateGeometry = new THREE.CylinderGeometry(9.5, 9.5, 0.5, 32);
+            const grate = new THREE.Mesh(grateGeometry, grateMaterial);
+            grate.position.y = 1.75; // Slightly above bottom of grill, below top edge
+            grate.receiveShadow = true;
+            scene.add(grate);
+            
+            // Simple Grill Legs (3 legs)
+            const legMaterial = new THREE.MeshStandardMaterial({ color: 0x505050, roughness: 0.7, metalness: 0.3 });
+            const legGeometry = new THREE.CylinderGeometry(0.5, 0.5, 5, 8);
+            const legPositions = [
+                {x: 7, z: 0},
+                {x: -3.5, z: 6.06}, // 7 * sin(60deg)
+                {x: -3.5, z: -6.06} // 7 * -sin(60deg)
+            ];
+
+            legPositions.forEach(pos => {
+                const leg = new THREE.Mesh(legGeometry, legMaterial);
+                leg.position.set(pos.x, -2.5, pos.z); // y is grill_height/2 + leg_height/2 (relative to grill center)
+                leg.castShadow = true;
+                grill.add(leg); // Add legs as children of grill body
+            });
+
+            // Ground plane (optional, but helps with shadows)
+            const groundGeometry = new THREE.PlaneGeometry(100, 100);
+            const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x99cc99, roughness: 1 }); // Grassy green
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = -5; // Position of grill legs bottom
+            ground.receiveShadow = true;
+            scene.add(ground);
+        }
+
+        function showPatties(numPieces) {
+            // Clear existing patties
+            while(pattiesGroup.children.length > 0){ 
+                pattiesGroup.remove(pattiesGroup.children[0]); 
+            }
+
+            const pattyMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.7 }); // SaddleBrown
+            const totalWeight = 1; // 1 lb
+            const individualWeight = totalWeight / numPieces;
+            const individualWeightOz = individualWeight * 16;
+
+            pattyInfoElement.innerHTML = `Showing ${numPieces} patt${numPieces === 1 ? 'y' : 'ies'}. Each is <strong>1/${numPieces} lb</strong> (or approximately <strong>${individualWeightOz.toFixed(1)} oz</strong>).`;
+            
+            const pattyRadius = 3;
+            const pattyHeight = 1;
+            const grillSurfaceY = 2.25; // Y position for patties on the grate (grate.position.y + grateHeight/2 + pattyHeight/2)
+
+            if (numPieces === 1) {
+                const pattyGeometry = new THREE.CylinderGeometry(pattyRadius, pattyRadius, pattyHeight, 32);
+                const patty = new THREE.Mesh(pattyGeometry, pattyMaterial);
+                patty.position.set(0, grillSurfaceY + pattyHeight / 2, 0);
+                patty.castShadow = true;
+                pattiesGroup.add(patty);
+            } else {
+                const angleIncrement = (2 * Math.PI) / numPieces;
+                const segmentAngle = (2 * Math.PI) / numPieces; // Angle for each segment if we were making pie slices
+                
+                // For showing separate smaller patties, not pie slices of one big patty
+                const placementRadius = 4; // How far from center to place multiple patties
+
+                for (let i = 0; i < numPieces; i++) {
+                    // Adjust pattyRadius based on numPieces to represent smaller individual patties
+                    // This is a visual representation, not a strict volume calculation for simplicity.
+                    // Let's make them smaller as there are more.
+                    let currentPattyRadius = pattyRadius * (1 / Math.sqrt(numPieces)) * 0.8 + 0.5; // Heuristic
+                    currentPattyRadius = Math.max(currentPattyRadius, 1); // Minimum radius
+
+                    const pattyGeometry = new THREE.CylinderGeometry(currentPattyRadius, currentPattyRadius, pattyHeight, 32);
+                    const patty = new THREE.Mesh(pattyGeometry, pattyMaterial);
+                    
+                    const angle = i * angleIncrement;
+                    const x = placementRadius * Math.cos(angle);
+                    const z = placementRadius * Math.sin(angle);
+                    
+                    patty.position.set(x, grillSurfaceY + pattyHeight / 2, z);
+                    patty.castShadow = true;
+                    pattiesGroup.add(patty);
+                }
+            }
+        }
+
+
+        function onWindowResize() {
+            const container = document.getElementById('threejs-canvas-container');
+            if (camera && renderer && container) {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update(); // only required if controls.enableDamping or controls.autoRotate are set to true
+            renderer.render(scene, camera);
+        }
+
+        // Initialize Three.js after DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof THREE !== 'undefined' && typeof THREE.OrbitControls !== 'undefined') {
+                initThreeJS();
+            } else {
+                document.getElementById('threejs-canvas-container').innerHTML = 
+                '<p style="color:red; text-align:center; padding-top: 50px;">Error: Three.js library or OrbitControls not loaded. Please check your internet connection or script paths.</p>';
+                console.error("Three.js or OrbitControls not loaded.");
+            }
+        });
+
+    </script>
+</body>
+</html>

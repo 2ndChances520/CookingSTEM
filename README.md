@@ -47,7 +47,7 @@ Because this project is delightfully simple and has no dependencies, getting it 
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/grill-and-measure.git
+   git clone https://github.com/2ndChances520/grill-and-measure.git
 Navigate to the folder:
 code
 Bash

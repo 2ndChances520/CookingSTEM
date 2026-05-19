@@ -1,5 +1,3 @@
-code
-Markdown
 # 🍔 Grill & Measure: The Fraction Feast! ✨
 
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
@@ -79,8 +77,4 @@ Distributed under the MIT License. See LICENSE for more information.
 <p style="color: #A0522D;"><b>Happy Grilling & Measuring! 🍔📐</b></p>
 <i>Created with ❤️ by James S.</i>
 </div>
-```
-Tips for your GitHub Repository:
-Take a screenshot or make a quick GIF of the 3D grill working in your browser and upload it to your repo. Replace the *(💡 Pro-Tip...)* line with ![Grill Demo](path-to-your-image.gif).
-Save your HTML code as index.html.
-Save this text as README.md right next to it.
+
